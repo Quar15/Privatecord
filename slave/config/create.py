@@ -6,7 +6,7 @@ config = ConfigParser()
 # Misc config options
 config['DATA'] = {
     'secret': 'my precious',
-    'name': 'Server Name',
+    'name': 'Club Name',
     'description': 'Description',
 }
 
