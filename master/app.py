@@ -79,6 +79,8 @@ def create_user():
 
     u.id = newUserID
 
+    logging.info('New user created')
+
     return render_template("pages/index.html")
 
 #----------------------------------------------------------------------------#
@@ -87,6 +89,7 @@ def create_user():
 
 @app.errorhandler(500)
 def internal_error(error):
+    logging.warning(f'Error 500. {error}')
     return render_template('errors/500.html'), 500
 
 
