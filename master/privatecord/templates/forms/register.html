@@ -1,0 +1,67 @@
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <fieldset>
+        <legend>Sign Up</legend>
+        <div>
+            {{ form.username.label(class="form-label") }}
+
+            {% if form.username.errors %}
+                {{ form.username(class="form-text-input is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for e in form.username.errors %}
+                        <span>{{ e }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.username(class="form-text-input") }}
+            {% endif %}
+        </div>
+        <div>
+            {{ form.email.label(class="form-label") }}
+            {% if form.email.errors %}
+                {{ form.email(class="form-text-input is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for e in form.email.errors %}
+                        <span>{{ e }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.email(class="form-text-input") }}
+            {% endif %}
+        </div>
+        <div>
+            {{ form.password.label(class="form-label") }}
+            {% if form.password.errors %}
+                {{ form.password(class="form-text-input is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for e in form.password.errors %}
+                        <span>{{ e }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.password(class="form-text-input") }}
+            {% endif %}
+        </div>
+        <div>
+            {{ form.confirmPassword.label(class="form-label") }}
+            {% if form.confirmPassword.errors %}
+                {{ form.confirmPassword(class="form-text-input is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for e in form.confirmPassword.errors %}
+                        <span>{{ e }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.confirmPassword(class="form-text-input") }}
+            {% endif %}
+        </div>
+    </fieldset>
+    <div>
+        {{ form.submit(class="btn btn-submit") }}
+    </div>
+</form>
+<div class="login-link">
+    <small>
+        Already Have An Account? <a href="{{ url_for('login') }}">Log In</a>
+    </small>
+</div>
