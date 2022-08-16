@@ -16,7 +16,7 @@ from privatecord import app, socketio_flask
 
 def main():
     #serve(app, host="0.0.0.0", port=8080, threads=6)
-    socketio_flask.run(app, host="0.0.0.0", port="8080")
+    socketio_flask.run(app, host="0.0.0.0", port=8080)
 
 
 if __name__ == "__main__":

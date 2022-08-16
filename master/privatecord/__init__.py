@@ -5,6 +5,8 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_socketio import SocketIO
 
+import socketio
+
 # local
 from config.load import CONFIG
 
@@ -26,6 +28,8 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 socketio_flask = SocketIO(app, cors_allowed_origins = "*")
+sio = socketio.Client()
+sio.connect('http://127.0.0.1:5000')
 
 from privatecord import routes
 from privatecord import socketio_serv

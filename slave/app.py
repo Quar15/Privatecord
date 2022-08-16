@@ -59,7 +59,13 @@ def handle_message(data):
     if request.remote_addr not in CONFIG['IP']['masterwhitelist']:
         logging.warning(f'Connection outside whitelist {request.remote_addr}')
     logging.info(f"Received message: '{data['msg']}' from {request.remote_addr}")
-    emit('message_slave', data, broadcast=True)
+    # Send message to other Master Servers
+    emit('message_slave', data, broadcast=True, skip_sid=[request.sid])
+
+
+@socketio.on('message_from_slave')
+def handle_message_test(data):
+    logging.info(f"Received message: '{data['msg']}' from {request.remote_addr}")
 
 
 @socketio.on('connect')
