@@ -1,10 +1,8 @@
 $(document).ready(()=>{
-    var socket = io.connect('localhost:5000');
+    var socket = io.connect('localhost:8080');
     var currRoom = 'General';
     
-    socket.on('connect', ()=>{
-        socket.send("User connected!");
-    });
+    socket.on('connect', ()=>{});
 
     socket.on('message', (data)=>{
         $('#messages').append($('<p>').text(data));
@@ -15,12 +13,7 @@ $(document).ready(()=>{
         $('#msg').val('');
     });
 
-    socket.on('join_room', (room)=>{
-        console.log('@INFO: Joined room');
-    });
-
     $('#joinBtn').on('click', ()=>{
-        console.log("@INFO: Trying to join room");
         socket.emit('join', {'username': $('#username').val(), 'room': 'room-1'});
         currRoom = 'room-1';
     });

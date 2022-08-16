@@ -1,3 +1,4 @@
+from http import server
 import uuid
 
 from flask_login import UserMixin
@@ -8,6 +9,26 @@ from privatecord import db, login_manager
 @login_manager.user_loader
 def load_user(user_id):
     return MasterUser.query.get(str(user_id))
+
+
+def get_slave_servers_IPs() -> list:
+    servers_IPs: list = db.session.query(SlaveServer.serverIP).all()
+    servers_IPs.append('127.0.0.1')
+    return servers_IPs
+
+
+def get_user_joined_servers(user_id: str) -> list:
+    servers_IDs: list = MasterUsersServers.query.with_entities(MasterUsersServers.slaveServerID).filter_by(masterUserID=user_id).all()
+    for i in range(len(servers_IDs)):
+        servers_IDs[i] = servers_IDs[i][0]
+    servers: list = SlaveServer.query.filter(SlaveServer.id.in_(servers_IDs)).all()
+    return servers
+
+
+def get_user_joined_servers_IPs(user_id: str) -> list:
+    servers = get_user_joined_servers(user_id=user_id)
+    # Return IPs for each server
+    return [s.serverIP for s in servers]
 
 
 def generate_user_ID() -> str:

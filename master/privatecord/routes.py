@@ -1,12 +1,12 @@
 import logging
 # flask
-from flask import redirect, render_template, request, flash, url_for
+from flask import redirect, render_template, request, flash, url_for, abort
 from flask_login import login_user, current_user, logout_user, login_required
 
 # local
 from privatecord import app, db, bcrypt
 from privatecord.forms import RegistrationForm, LoginForm
-from privatecord.models import MasterUser, SlaveServer, MasterUsersServers, generate_user_ID
+from privatecord.models import MasterUser, SlaveServer, MasterUsersServers, generate_user_ID, get_user_joined_servers, get_user_joined_servers_IPs
 
 #----------------------------------------------------------------------------#
 # Flask Controllers
@@ -18,8 +18,18 @@ def index():
 
 
 @app.route("/chat", methods = ['GET'])
+@login_required
 def chat():
     return render_template("pages/chat.html")
+
+
+@app.route("/check", methods = ['GET', 'POST'])
+def msg_check():
+    # Check if request comes from valid server and user joined that server
+    if request.remote_addr not in get_user_joined_servers_IPs(current_user.id):
+        abort(403)
+
+    return {'Valid': True}
 
 
 @app.route("/account", methods = ['GET', 'POST'])
@@ -62,13 +72,16 @@ def login():
         # Validate login data
         u = MasterUser.query.filter_by(email=form.email.data).first()
         if u and bcrypt.check_password_hash(u.password, form.password.data):
+            # Login user
             login_user(u, remember=form.remember.data)
             next_page = request.args.get('next')
             flash('You have been logged in!', 'success')
+            # Redirect to last page if exists or chat page
             return redirect(next_page) if next_page else redirect(url_for('chat'))
         else:
             flash('Login unsuccessful. Please check email and password', 'error')
     return render_template("pages/login.html", form=form)
+
 
 @app.route('/logout', methods = ['GET'])
 def logout():

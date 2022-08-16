@@ -17,7 +17,7 @@ from datetime import date
 # flask
 from flask import Flask, redirect, render_template, abort, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_socketio import SocketIO, send, join_room, leave_room
+from flask_socketio import SocketIO, send, emit, join_room, leave_room
 
 # local
 from config.load import CONFIG
@@ -54,37 +54,29 @@ class Users(db.Model):
 # Socketio Functions
 #----------------------------------------------------------------------------#
 
-@socketio.on('message')
-def handle_message(message, room="General"):
-    print("Received message:", message)
-    if message != "User connected!":
-        send(message, to=room)
+@socketio.on('message_master')
+def handle_message(data):
+    if request.remote_addr not in CONFIG['IP']['masterwhitelist']:
+        logging.warning(f'Connection outside whitelist {request.remote_addr}')
+    logging.info(f"Received message: '{data['msg']}' from {request.remote_addr}")
+    emit('message_slave', data, broadcast=True)
 
-@socketio.on('join')
-def on_join(data):
-    username = data['username']
-    room = data['room']
-    join_room(room)
-    send(username + ' has entered the room (' + room + ').', to=room)
-
-@socketio.on('leave')
-def on_leave(data):
-    username = data['username']
-    room = data['room']
-    leave_room(room)
-    send(username + ' has left the room.', to=room)
 
 @socketio.on('connect')
 def test_connect(auth):
+    if request.remote_addr not in CONFIG['IP']['masterwhitelist']:
+        logging.warning(f'Connection outside whitelist {request.remote_addr}')
+        return
     # Connect to every room (1 for each club)
-    
-    logging.info('Client connected')
+    join_room('General')
+    logging.info('Master Server connected')
+
 
 @socketio.on('disconnect')
 def test_disconnect():
     # Disconnect from every room (1 for each club)
 
-    logging.info('Client disconnected')
+    logging.info('Master Server disconnected')
 
 #----------------------------------------------------------------------------#
 # Flask Controllers
