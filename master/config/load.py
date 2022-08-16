@@ -16,7 +16,7 @@ def LoadConfig() -> ConfigParser:
     cfg = ConfigParser()
 
     # Absolute path to config file
-    config_path = f"{basedir}\\config.ini"
+    config_path = f"{basedir}/config.ini"
 
     # Log error if config is not found
     if not os.path.exists(config_path):
