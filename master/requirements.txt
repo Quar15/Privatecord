@@ -1,9 +1,0 @@
-Flask==2.2.1
-Flask_Bcrypt==1.0.1
-Flask_Login==0.6.2
-Flask_SocketIO==5.2.0
-Flask_SQLAlchemy==2.5.1
-Flask_WTF==1.0.1
-gevent_socketio==0.3.6
-waitress==2.1.2
-WTForms==3.0.1
