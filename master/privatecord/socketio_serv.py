@@ -1,5 +1,5 @@
 import logging
-from multiprocessing.connection import wait
+from datetime import date
 
 
 from flask_socketio import send, join_room, leave_room, emit
@@ -12,12 +12,15 @@ from privatecord import socketio_flask, sio
 #----------------------------------------------------------------------------#
 
 @socketio_flask.on('message')
-def handle_message(message, room="General"):
-    print("Received message:", message)
+def handle_message(data, room="General"):
+    print(data)
+    data['date'] = str(date.today().strftime("%d.%m.%Y"))
+    print(data)
+    print("Received message:", data['msg'])
     # Send message with metadata to Slave Server
-    sio.emit('message_master', {'msg': message, 'room': room})
+    sio.emit('message_master', data)
     # Send message to clients connected with this server
-    send(message, to=room)
+    send(data, to=room)
 
 
 @socketio_flask.on('message_from_slave')
