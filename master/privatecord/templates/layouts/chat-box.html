@@ -1,0 +1,24 @@
+<div class="chat-box" id="chat-box">
+    <div id="messages">
+        <!-- <div class="message">
+            <div class="avatar">
+                <img src="{{ url_for('static', filename='img/profile_default.png') }}">
+            </div>
+            <div class="content-box">
+                <div class="header">
+                    <h3>Nickname</h3>
+                    <p>17.08.2022</p>
+                </div>
+                <div class="content">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores atque deserunt nulla molestias repellat, labore eius accusamus nihil vel, reprehenderit at! Sed numquam dolor blanditiis? Praesentium inventore facilis quasi quae!
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <div class="inputs">
+        <button id="plus"><i class='bx bxs-plus-square'></i></button>
+        <input type="hidden" id="username" value="{{ current_user.username }}">
+        <input type="text" id="msg" placeholder="Message..." required>
+        <button id="sendBtn"><i class='bx bxs-send' ></i></button>
+    </div>
+</div>

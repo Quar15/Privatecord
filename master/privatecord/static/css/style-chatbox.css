@@ -1,0 +1,124 @@
+:root{
+    --background-darker: #152340;
+    --background-darker-highlight: #1c2d4e;
+    --background-dark: #405B73;
+    --text: #dadada;
+    --front-darker: #3B8DBF;
+    --front-lighter: #34A6BF;
+}
+
+.chat-box{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    -webkit-box-flex: 1;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    height: 90vh;
+
+    background-color: var(--background-darker);
+    background: linear-gradient(30deg, var(--background-darker) 0%, var(--background-darker) 30%, var(--background-dark) 100%);
+    color: var(--text);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.chat-box #messages{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-flex: 1;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 100%;
+    padding: 10px 30px;
+}
+
+.chat-box #messages .message{
+    display: flex;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+
+.chat-box #messages .message:hover{
+    background-color: var(--background-darker-highlight);
+}
+
+.chat-box #messages .message .avatar img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.chat-box #messages .message .content-box{
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-box #messages .message .content-box .header{
+    display: flex;
+}
+
+.chat-box #messages .message .content-box .header h3{
+    margin-right: 10px;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.chat-box #messages .message .content-box .header p{
+    font-size: 12px;
+    line-height: 22px;
+}
+
+.chat-box #messages .message .content-box .content{
+    font-size: 16px;
+}
+
+.chat-box .inputs{
+    bottom: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 97%;
+
+    color: var(--text);
+    background-color: var(--background-darker-highlight);
+    border-radius: 8px;
+    padding: 5px 10px;
+}
+
+.chat-box .inputs i{
+    font-size: 30px;
+}
+
+.chat-box .inputs #plus, .chat-box .inputs #msg, .chat-box .inputs #sendBtn{
+    border: none;
+    background: none;
+    outline: none;
+    color: var(--text);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.chat-box .inputs #msg{
+    flex: 1;
+    padding: 10px;
+}
+
+.chat-box .inputs #msg:focus{
+    border: none;
+}
+
+.chat-box .inputs #plus, .chat-box .inputs #sendBtn {
+    width: 30px;
+    height: 30px;
+}
+
+.chat-box .inputs #plus:hover, .chat-box .inputs #sendBtn:hover {
+    cursor: pointer;
+    color: gray;
+}
