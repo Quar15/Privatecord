@@ -41,18 +41,32 @@
 .chat-box #messages .message{
     display: flex;
     padding: 5px 10px;
-    margin-bottom: 10px;
+    position: relative;
 }
 
 .chat-box #messages .message:hover{
     background-color: var(--background-darker-highlight);
 }
 
+.chat-box #messages .message:hover .avatar p{
+    display: block;
+}
+
+.chat-box #messages .message .avatar{
+    width: 40px;
+    margin-right: 15px;
+}
+
 .chat-box #messages .message .avatar img{
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-right: 15px;
+}
+
+.chat-box #messages .message .avatar p{
+    margin-top: 3px;
+    font-size: 12px;
+    display: none;
 }
 
 .chat-box #messages .message .content-box{

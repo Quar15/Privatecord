@@ -15,7 +15,7 @@ from pathlib import Path
 from datetime import date
 
 # flask
-from flask import Flask, redirect, render_template, abort, request
+from flask import Flask, redirect, render_template, abort, request, url_for, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
 
@@ -100,6 +100,16 @@ def get_metadata():
         "name": CONFIG['DATA']['name'],
         "description": CONFIG['DATA']['description'],
     }
+
+@app.route("/img/upload/<img_src>", methods = ['GET', 'POST'])
+def get_img(img_src):
+    print('@INFO: Image request')
+    image_path = os.path.abspath(os.path.dirname(__file__)) + url_for('static', filename=f'img/upload/{img_src}')
+    if os.path.exists(image_path):
+        # Send data from absolute path
+        return(send_from_directory(os.path.abspath(os.path.dirname(__file__)) + url_for('static', filename=f'img/upload'), img_src, as_attachment=True))
+    # If requested file doesn't exist return 404
+    abort(404)
 
 #----------------------------------------------------------------------------#
 # Flask Error handlers

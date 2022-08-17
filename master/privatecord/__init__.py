@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_socketio import SocketIO
+from flask_caching import Cache
 
 import socketio
 
@@ -19,6 +20,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = CONFIG['DB']['path']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = CONFIG['DATA']['secret']
 #app.env = "Production"
+
+cache = Cache(config={
+    'CACHE_TYPE': 'FileSystemCache', 
+    'CACHE_DIR': 'cache', 
+    'CACHE_THRESHOLD': 10,
+    'CACHE_DEFAULT_TIMEOUT': 15
+})
+cache.init_app(app)
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)

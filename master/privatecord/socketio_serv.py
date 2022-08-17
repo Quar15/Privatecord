@@ -1,26 +1,43 @@
 import logging
-from datetime import date
+from datetime import date, datetime
+from socket import timeout
 
-
+from flask import request, session
+from flask_login import current_user
 from flask_socketio import send, join_room, leave_room, emit
 import socketio
 
-from privatecord import socketio_flask, sio
+from privatecord import socketio_flask, sio, cache
 
 #----------------------------------------------------------------------------#
 # Socketio Server Functions
 #----------------------------------------------------------------------------#
 
+last_msg_data = {'ID': 'Init'}
+
 @socketio_flask.on('message')
 def handle_message(data, room="General"):
-    print(data)
+    global last_msg_data
+    # Add date and time to metadata of the message
     data['date'] = str(date.today().strftime("%d.%m.%Y"))
-    print(data)
-    print("Received message:", data['msg'])
-    # Send message with metadata to Slave Server
-    sio.emit('message_master', data)
+    data['time'] = str(datetime.now().strftime("%H:%M"))
+    if(last_msg_data['ID'] == current_user.id):
+        data['continue_thread'] = True
+    else:
+        data['continue_thread'] = False
+    print("Received message:", data)
     # Send message to clients connected with this server
     send(data, to=room)
+    # Send message with metadata to Slave Server
+    sio.emit('message_master', data)
+    data['ID'] = current_user.id
+    last_msg_data = data
+
+    # Cache (server-side) messages
+    if cache.has('messages'):
+        cache.set('messages', [*cache.get('messages'), data])
+    else:
+        cache.set('messages', [data])
 
 
 @socketio_flask.on('message_from_slave')
@@ -47,6 +64,10 @@ def on_leave(data):
 def test_connect(auth):
     # Connect to every room (1 for each club)
     join_room('General')
+    # Load messages from cache (server-side)
+    if cache.has('messages'):
+        for msg in cache.get('messages'):
+            send(msg, to=request.sid)
     logging.info('Client connected')
 
 

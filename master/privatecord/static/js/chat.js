@@ -2,14 +2,24 @@ function createMsgHtml(data){
     var msg = $('<div>').addClass('message');
     
     var avatar = $('<div>').addClass('avatar');
-    avatar.append($('<img>').attr('src', "/static/img/profile_default.png"));
+    if(!data['continue_thread'])
+    {
+        avatar.append($('<img>').attr('src', "/static/img/profile_default.png"));
+    }
+    else
+    {
+        avatar.append($('<p>').text(data['time']));
+    }
     msg.append(avatar);
     
     var contentBox = $('<div>').addClass('content-box');
-    var header = $('<div>').addClass('header');
-    header.append($('<h3>').text(data['username']));
-    header.append($('<p>').text(data['date']));
-    contentBox.append(header);
+    if(!data['continue_thread'])
+    {
+        var header = $('<div>').addClass('header');
+        header.append($('<h3>').text(data['username']));
+        header.append($('<p>').text(data['date']));
+        contentBox.append(header);
+    }
     var content = $('<div>').addClass('content');
     content.text(data['msg']);
     contentBox.append(content);

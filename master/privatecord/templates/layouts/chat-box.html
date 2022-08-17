@@ -5,6 +5,9 @@
                 <img src="{{ url_for('static', filename='img/profile_default.png') }}">
             </div>
             <div class="content-box">
+                <div class="message-menu">
+                    
+                </div>
                 <div class="header">
                     <h3>Nickname</h3>
                     <p>17.08.2022</p>
@@ -22,3 +25,10 @@
         <button id="sendBtn"><i class='bx bxs-send' ></i></button>
     </div>
 </div>
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js" integrity="sha512-mHO4BJ0ELk7Pb1AzhTi3zvUeRgq3RXVOu9tTRfnA6qOxGK4pG2u57DJYolI4KrEnnLTcH9/J5wNOozRTDaybXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js" integrity="sha512-9mpsATI0KClwt+xVZfbcf2lJ8IFBAwsubJ6mI3rtULwyM3fBmQFzj0It4tGqxLOGQwGfJdk/G+fANnxfq9/cew==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

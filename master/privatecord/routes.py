@@ -1,6 +1,8 @@
 import logging
+import io, os
+import requests
 # flask
-from flask import redirect, render_template, request, flash, url_for, abort
+from flask import redirect, render_template, request, flash, url_for, abort, make_response, send_from_directory
 from flask_login import login_user, current_user, logout_user, login_required
 
 # local
@@ -23,14 +25,21 @@ def chat():
     return render_template("pages/chat.html")
 
 
-@app.route("/check", methods = ['GET', 'POST'])
-def msg_check():
-    # Check if request comes from valid server and user joined that server
-    if request.remote_addr not in get_user_joined_servers_IPs(current_user.id):
-        abort(403)
+@app.route("/img/upload/<img_src>", methods = ['GET', 'POST'])
+def get_img(img_src):
+    image_path = os.path.abspath(os.path.dirname(__file__)) + url_for('static', filename=f'img/upload/{img_src}')
+    if os.path.exists(image_path):
+        # Send data from absolute path
+        return(send_from_directory(os.path.abspath(os.path.dirname(__file__)) + url_for('static', filename=f'img/upload'), img_src, as_attachment=False))
+    # If requested file doesn't exist return 404
+    abort(404)
 
-    return {'Valid': True}
-
+@app.route("/remote/img/upload/<img_src>", methods = ['GET', 'POST'])
+def get_img_from_slave(img_src):
+    response = requests.get(f"http://localhost:5000/img/upload/{img_src}")
+    if response.status_code == 200:
+        return response.content
+    abort(404)
 
 @app.route("/account", methods = ['GET', 'POST'])
 @login_required
