@@ -1,6 +1,7 @@
 import logging
 from datetime import date, datetime
 from socket import timeout
+import re
 
 from flask import request, session
 from flask_login import current_user
@@ -18,6 +19,9 @@ last_msg_data = {'ID': 'Init'}
 @socketio_flask.on('message')
 def handle_message(data, room="General"):
     global last_msg_data
+    # Server check for empty/containing only whitespace message
+    if re.search("^\s*$", data['msg']):
+        return
     # Add date and time to metadata of the message
     data['date'] = str(date.today().strftime("%d.%m.%Y"))
     data['time'] = str(datetime.now().strftime("%H:%M"))
@@ -67,6 +71,8 @@ def test_connect(auth):
     # Load messages from cache (server-side)
     if cache.has('messages'):
         for msg in cache.get('messages'):
+            # Forbid user ID in messages
+            msg['ID'] = '403'
             send(msg, to=request.sid)
     logging.info('Client connected')
 

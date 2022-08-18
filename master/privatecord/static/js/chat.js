@@ -39,7 +39,11 @@ $(document).ready(()=>{
         $("#messages, .content-box").scrollTop($("#messages, .content-box")[0].scrollHeight);
     });
 
+    whitespacesRegex = new RegExp("^\\s*$", "g");
+
     $('#sendBtn').on('click', ()=>{
+        // Skip empty messages
+        if ($('#msg').val().match(whitespacesRegex) || $('#msg').val() == "") return;
         socket.send({'username': $('#username').val(), 'msg': $('#msg').val()}, currRoom);
         $('#msg').val('');
         $("#messages, .content-box").scrollTop($("#messages, .content-box")[0].scrollHeight);
@@ -53,7 +57,6 @@ $(document).ready(()=>{
     $('#msg').keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13'){
-            console.log('Test');
             $('#sendBtn').click();
         }
     });
