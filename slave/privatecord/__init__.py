@@ -19,3 +19,6 @@ app.config['SECRET'] = CONFIG['DATA']['secret']
 socketio_flask = SocketIO(app, cors_allowed_origins = "*")
 
 db = SQLAlchemy(app)
+
+from privatecord import routes
+from privatecord import socketio_serv
