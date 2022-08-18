@@ -8,11 +8,13 @@ config['DATA'] = {
     'secret': 'my precious',
     'name': 'Server Name',
     'description': 'Description',
+    'cache_timeout': 15
 }
 
 # IP config options
 config['IP'] = {
-    'banlist': []
+    'banlist': [],
+    'port': 8080
 }
 
 # Database config options

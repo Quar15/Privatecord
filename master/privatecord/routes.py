@@ -6,7 +6,7 @@ from flask import redirect, render_template, request, flash, url_for, abort, mak
 from flask_login import login_user, current_user, logout_user, login_required
 
 # local
-from privatecord import app, db, bcrypt
+from privatecord import app, db, bcrypt, CONFIG
 from privatecord.forms import RegistrationForm, LoginForm
 from privatecord.models import MasterUser, SlaveServer, MasterUsersServers, generate_user_ID, get_user_joined_servers, get_user_joined_servers_IPs
 
@@ -22,7 +22,7 @@ def index():
 @app.route("/chat", methods = ['GET'])
 @login_required
 def chat():
-    return render_template("pages/chat.html")
+    return render_template("pages/chat.html", socketio_server_port=CONFIG['IP']['port'])
 
 
 @app.route("/img/upload/<img_src>", methods = ['GET', 'POST'])

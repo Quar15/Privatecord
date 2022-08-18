@@ -29,7 +29,7 @@ function createMsgHtml(data){
 }
 
 $(document).ready(()=>{
-    var socket = io.connect('localhost:8080');
+    var socket = io.connect(window.location.hostname + ":" + port);
     var currRoom = 'General';
     
     socket.on('connect', ()=>{});

@@ -25,7 +25,7 @@ cache = Cache(config={
     'CACHE_TYPE': 'FileSystemCache', 
     'CACHE_DIR': 'cache', 
     'CACHE_THRESHOLD': 10,
-    'CACHE_DEFAULT_TIMEOUT': 15
+    'CACHE_DEFAULT_TIMEOUT': int(CONFIG['DATA']['cache_timeout'])
 })
 cache.init_app(app)
 
