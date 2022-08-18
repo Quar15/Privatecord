@@ -22,19 +22,24 @@ def handle_message(data, room="General"):
     # Server check for empty/containing only whitespace message
     if re.search("^\s*$", data['msg']):
         return
+
     # Add date and time to metadata of the message
     data['date'] = str(date.today().strftime("%d.%m.%Y"))
     data['time'] = str(datetime.now().strftime("%H:%M"))
+    # Decide if message should continue thread
     if(last_msg_data['ID'] == current_user.id):
         data['continue_thread'] = True
     else:
         data['continue_thread'] = False
+    # Forbid user ID in messages
+    data['ID'] = '403'
     print("Received message:", data)
     # Send message to clients connected with this server
     send(data, to=room)
-    # Send message with metadata to Slave Server
-    sio.emit('message_master', data)
+    # Add ID to metadata of the message
     data['ID'] = current_user.id
+    # Send message with metadata to Slave Server
+    sio.emit('message_from_master', data)
     last_msg_data = data
 
     # Cache (server-side) messages
@@ -47,6 +52,8 @@ def handle_message(data, room="General"):
 @socketio_flask.on('message_from_slave')
 def handle_message_from_slave(data):
     print("Received message from slave server:", data['msg'])
+    # Forbid user ID in messages
+    data['ID'] = '403'
     send(data['msg'], to=data['room'])
 
 
@@ -93,7 +100,12 @@ def send_msg(data):
     sio_server.connect('http://127.0.0.1:8080')
     sio_server.emit('message_from_slave', data)
 
+class SlaveServerNamespace(socketio.ClientNamespace):
+    def on_message_slave(self, sid, data):
+        send_msg(data)
 
-@sio.on('message_slave')
-def handle_message_slave(data):
-    send_msg(data)
+sio.register_namespace(SlaveServerNamespace('/'))
+
+# @sio.on('message_slave')
+# def handle_message_slave(data):
+#     send_msg(data)
