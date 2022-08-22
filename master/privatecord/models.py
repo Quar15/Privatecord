@@ -1,4 +1,3 @@
-from http import server
 import uuid
 
 from flask_login import UserMixin
