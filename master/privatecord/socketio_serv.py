@@ -14,7 +14,7 @@ from privatecord import socketio_flask, sio, cache
 # Socketio Server Functions
 #----------------------------------------------------------------------------#
 
-last_msg_data = {'ID': 'Init'}
+last_msg_data = {'user_ID': 'Init'}
 
 @socketio_flask.on('message')
 def handle_message(data, room="General"):
@@ -22,17 +22,16 @@ def handle_message(data, room="General"):
     # Server check for empty/containing only whitespace message
     if re.search("^\s*$", data['msg']):
         return
-
     # Add date and time to metadata of the message
     data['date'] = str(date.today().strftime("%d.%m.%Y"))
     data['time'] = str(datetime.now().strftime("%H:%M"))
     # Decide if message should continue thread
-    if(last_msg_data['ID'] == current_user.id):
+    if(last_msg_data['user_ID'] == current_user.id):
         data['continue_thread'] = True
     else:
         data['continue_thread'] = False
     # Forbid user ID in messages
-    data['ID'] = '403'
+    data['user_ID'] = '403'
     print("Received message:", data)
     # Send message to clients connected with this server
     send(data, to=room)
@@ -53,8 +52,8 @@ def handle_message(data, room="General"):
 def handle_message_from_slave(data):
     print("Received message from slave server:", data['msg'])
     # Forbid user ID in messages
-    data['ID'] = '403'
-    send(data['msg'], to=data['room'])
+    data['user_ID'] = '403'
+    send(data, to='General')
 
 
 @socketio_flask.on('join')
@@ -79,7 +78,7 @@ def test_connect(auth):
     if cache.has('messages'):
         for msg in cache.get('messages'):
             # Forbid user ID in messages
-            msg['ID'] = '403'
+            msg['user_ID'] = '403'
             send(msg, to=request.sid)
     logging.info('Client connected')
 
@@ -101,7 +100,7 @@ def send_msg(data):
     sio_server.emit('message_from_slave', data)
 
 class SlaveServerNamespace(socketio.ClientNamespace):
-    def on_message_slave(self, sid, data):
+    def on_message_slave(self, data):
         send_msg(data)
 
 sio.register_namespace(SlaveServerNamespace('/'))
